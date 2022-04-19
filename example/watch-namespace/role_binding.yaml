@@ -1,0 +1,18 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: redb-role
+subjects:
+- kind: ServiceAccount
+  name: redis-enterprise-operator
+  namespace: redis
+- kind: ServiceAccount
+  name: redis-enterprise-admission
+  namespace: redis
+- kind: ServiceAccount
+  name: rec  # service account of the REC, usually the same as the name of the custom resource
+  namespace: redis
+roleRef:
+  kind: Role
+  name: redb-role
+  apiGroup: rbac.authorization.k8s.io

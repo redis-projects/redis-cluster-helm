@@ -1,0 +1,21 @@
+{{ if (default .Values.redis.cluster.install true) }}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ default "rec" .Values.redis.cluster.name }}-ui
+  namespace: redis
+  labels:
+    app: redis-enterprise
+    redis.io/cluster: {{ default "rec" .Values.redis.cluster.name }}
+spec:
+  host: {{ default "rec" .Values.redis.cluster.name }}-ui-{{ .Values.redis.cluster.namespace }}.apps.uki-okd.demo.redislabs.com
+  to:
+    kind: Service
+    name: {{ default "rec" .Values.redis.cluster.name }}-ui
+  port:
+    targetPort: 8443
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None
+{{ end }}

@@ -1,0 +1,10 @@
+{{ if (default .Values.redis.operator.install true) }}
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ default "redis-enterprise-operator" .Values.redis.operator.name }}
+  namespace: {{ .Values.redis.cluster.namespace }}
+spec:
+  targetNamespaces:
+    - {{ .Values.redis.cluster.namespace }}
+{{ end }}

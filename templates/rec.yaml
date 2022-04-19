@@ -1,0 +1,32 @@
+{{ if (default .Values.redis.cluster.install true) }}
+apiVersion: app.redislabs.com/v1
+kind: RedisEnterpriseCluster
+metadata:
+  name: {{ default "rec" .Values.redis.cluster.name }}
+  namespace: {{ .Values.redis.cluster.namespace }}
+spec:
+  nodes: {{ default "3" .Values.redis.cluster.nodes }}
+  persistentSpec:
+    enabled: {{ .Values.redis.cluster.persistence.enabled }}
+    {{- if .Values.redis.cluster.persistence.enabled  }}
+    volumeSize: {{ .Values.redis.cluster.persistence.volumeSize  }}
+    storageClassName: {{ default "standard" .Values.redis.cluster.persistence.storageClassName | quote }}
+    {{- end }}
+  uiServiceType: ClusterIP
+  username: {{ .Values.redis.cluster.username }}
+  redisEnterpriseNodeResources:
+    limits:
+      cpu: {{ default "4000m" .Values.redis.cluster.limits.cpu | quote }}
+      memory: {{ default "4Gi" .Values.redis.cluster.limits.memory }}
+    requests:
+      cpu: {{ default "4000m" .Values.redis.cluster.limits.cpu | quote }}
+      memory: {{ default "4Gi" .Values.redis.cluster.requests.memory }}
+  redisEnterpriseImageSpec:
+    imagePullPolicy: IfNotPresent
+    repository: registry.connect.redhat.com/redislabs/redis-enterprise
+    versionTag: 6.2.10-90.rhel7-openshift
+  redisEnterpriseServicesRiggerImageSpec:
+    repository: registry.connect.redhat.com/redislabs/services-manager
+  bootstrapperImageSpec:
+    repository: registry.connect.redhat.com/redislabs/redis-enterprise-operator
+{{ end }}

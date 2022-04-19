@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: rec-ui
+  namespace: redis
+  labels:
+    app: redis-enterprise
+    redis.io/cluster: rec
+spec:
+  host: rec-ui-redis.apps.uki-okd.demo.redislabs.com
+  to:
+    kind: Service
+    name: rec-ui
+  port:
+    targetPort: 8443
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

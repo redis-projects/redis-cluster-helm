@@ -1,0 +1,29 @@
+---
+redis:
+  cluster:
+    install: true
+    limits:
+      cpu: 4000m
+      memory: 10Gi
+    name: rec
+    namespace: redis
+    nodes: 3
+    persistence:
+      enabled: true
+      storageClassName: standard
+      volumeSize: 30Gi
+    requests:
+      cpu: 4000m
+      memory: 10Gi
+  operator:
+    install: true
+    name: redis-enterprise-operator
+    subscription:
+      name: redis-enterprise-operator-cert-rhmp
+      spec:
+        channel: production
+        installPlanApproval: Automatic
+        name: redis-enterprise-operator-cert-rhmp
+        source: redhat-marketplace
+        sourceNamespace: openshift-marketplace
+        startingCSV: redis-enterprise-operator.v6.2.10-4

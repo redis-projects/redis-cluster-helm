@@ -1,0 +1,16 @@
+{{ if (default .Values.redis.operator.install true) }}
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/redis-enterprise-operator-cert-rhmp.redis: ""
+  name: {{ .Values.redis.operator.name }}
+  namespace: {{ $.Values.redis.cluster.namespace }}
+spec:
+  channel: {{ default "production" .Values.redis.operator.subscription.spec.channel }}
+  installPlanApproval: {{ default "Automatic" .Values.redis.operator.subscription.spec.installPlanApproval }}
+  name: {{ .Values.redis.operator.subscription.spec.name }}
+  source: {{ .Values.redis.operator.subscription.spec.source }}
+  sourceNamespace: {{ .Values.redis.operator.subscription.spec.sourceNamespace }}
+  startingCSV: {{ .Values.redis.operator.subscription.spec.startingCSV }}
+{{ end }}

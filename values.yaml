@@ -3,7 +3,7 @@ redis:
   cluster:
     install: true
     limits:
-      cpu: 4000m
+      cpu: 4
       memory: 10Gi
     name: rec
     namespace: redis
@@ -13,8 +13,9 @@ redis:
       storageClassName: standard
       volumeSize: 30Gi
     requests:
-      cpu: 4000m
+      cpu: 4
       memory: 10Gi
+    watchedNamespaces: #Comma Seperated List of Namespaces e.g. redis-apps,redis-apps2
   operator:
     install: true
     name: redis-enterprise-operator

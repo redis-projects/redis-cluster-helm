@@ -166,3 +166,34 @@ redis-enterprise-operator-cert                      Certified Operators   71d
 ```
 
 NOTE: To view installation options:  `oc describe packagemanifests redis-enterprise-operator-cert-rhmp -n openshift-marketplace` 
+
+
+## ArgoCD:
+
+1. Install the Openshift-GitOps operator or the ArgoCD operator. 
+2. Login with Admin or SSO user:
+   1. Navigate to `oc get route openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'`
+
+```bash
+# Get the admin Password
+oc get secret/openshift-gitops-cluster -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d
+#Or bind to a local ENV Var
+argoPass=$(oc get secret/openshift-gitops-cluster -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d)
+
+# ArgoCD Server URL 
+oc get route openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
+#Or bind to a local ENV Var
+argoURL=$(oc get route openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')
+
+# Login via CLI
+argocd login --insecure --grpc-web $argoURL  --username admin --password $argoPass
+
+# Or Login via SSO 
+argocd login -sso --insecure --grpc-web $argoURL 
+```
+2. Give the Gitops Service Account CRUD permissions into a namespace
+
+```bash
+$ oc adm policy add-role-to-user admin system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller -n redis
+clusterrole.rbac.authorization.k8s.io/admin added: "system:serviceaccount:openshift-gitops:openshift-gitops-argocd-application-controller"
+```
